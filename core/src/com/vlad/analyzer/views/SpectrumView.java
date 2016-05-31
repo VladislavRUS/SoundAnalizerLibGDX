@@ -15,12 +15,12 @@ import com.vlad.analyzer.sound.SpectrumData;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpectrumView extends View {
+public class SpectrumView extends AbstractView {
+    private static final int FREQ_NUMBER = 342;
     private final Game program;
     private Map<Float, Float> soundData;
     private Map<Float, Rect> rectangles;
     private ShapeRenderer shapeRenderer;
-    private Thread soundCapturing;
     private SpectrumData data;
 
     public SpectrumView(Game program){
@@ -48,16 +48,16 @@ public class SpectrumView extends View {
         stage.addActor(backButton);
 
         int j = 30;
-        for(float i = 1, plus = WIDTH / 342; j < SpectrumData.BUFFER_SIZE; i += plus, j++){
-			float freq = j * SpectrumData.SAMPLE_RATE / SpectrumData.BUFFER_SIZE;
+        for(float i = 1, plus = WIDTH / FREQ_NUMBER; j < SpectrumData.SPECTRUM_DATA_SIZE; i += plus, j++){
+			float freq = j * SpectrumData.SAMPLE_RATE / SpectrumData.SPECTRUM_DATA_SIZE;
 			if(freq > SpectrumData.MAX_FREQ)
 				break;
             rectangles.put(freq, new Rect(i, 10));
 		}
 
-        SpectrumData.ACTIVE = true;
 		data = new SpectrumData(soundData);
-        soundCapturing = new Thread(data);
+        data.setActive(true);
+        Thread soundCapturing = new Thread(data);
 		soundCapturing.start();
 
         //Set magnitude
@@ -70,7 +70,6 @@ public class SpectrumView extends View {
             }
         }).start();
 	}
-
 
     @Override
     protected void draw(float delta) {
@@ -89,6 +88,6 @@ public class SpectrumView extends View {
     @Override
     protected void viewDispose() {
         data.closeLine();
-        SpectrumData.ACTIVE = false;
+        data.setActive(false);
     }
 }

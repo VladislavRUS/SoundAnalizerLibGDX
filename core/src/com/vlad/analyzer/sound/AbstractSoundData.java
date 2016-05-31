@@ -2,9 +2,11 @@ package com.vlad.analyzer.sound;
 
 import javax.sound.sampled.*;
 
-public abstract class SoundData {
+public abstract class AbstractSoundData {
+    public static final int SPECTRUM_DATA_SIZE = 4096;
+    public static final int SIGNAL_DATA_SIZE = 2048;
+
     public static final int SAMPLE_RATE = 44100;
-    public static final int BUFFER_SIZE = 4096;
     public static final int MAX_FREQ = 4000;
 
     protected AudioFormat getFormat() {

@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public abstract class View extends ScreenAdapter{
+public abstract class AbstractView extends ScreenAdapter{
     protected static final float WIDTH = 1200;
     protected static final float HEIGHT = 600;
 
@@ -53,6 +53,7 @@ public abstract class View extends ScreenAdapter{
 
     @Override
     public void dispose(){
+        super.dispose();
         stage.dispose();
         viewDispose();
     }

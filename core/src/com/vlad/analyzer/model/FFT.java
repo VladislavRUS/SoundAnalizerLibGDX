@@ -19,11 +19,10 @@ public class FFT {
         Complex[] q = fft(even);
 
         //Then odd
-        double[] odd = even;
         for(int i = 0; i < N/2; i++){
-            odd[i] = x[2*i+1];
+            even[i] = x[2*i+1];
         }
-        Complex[] r = fft(odd);
+        Complex[] r = fft(even);
 
         //Combine
         Complex[] y = new Complex[N];

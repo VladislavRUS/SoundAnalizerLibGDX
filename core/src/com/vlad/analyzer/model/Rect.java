@@ -9,14 +9,6 @@ public class Rect {
     private float freq;
     private float magnitude;
 
-    public float getFreq() {
-        return freq;
-    }
-
-    public float getMagnitude() {
-        return magnitude;
-    }
-
     public Rect(float freq, float magnitude) {
         this.freq = freq;
         this.magnitude = magnitude;

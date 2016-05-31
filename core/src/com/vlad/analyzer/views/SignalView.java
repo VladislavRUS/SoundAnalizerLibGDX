@@ -11,14 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.vlad.analyzer.sound.SignalData;
-import com.vlad.analyzer.sound.SoundData;
 
-public class SignalView extends View {
-    private final Game program;
-    private byte[] soundData;
-    private Thread soundCapturing;
+public class SignalView extends AbstractView {
     private ShapeRenderer shapeRenderer;
     private SignalData signalData;
+    private final Game program;
+    private byte[] soundData;
+
+    float plus = WIDTH / SignalData.SIGNAL_DATA_SIZE;
+    float height = HEIGHT/2;
+    float j = 0;
 
     public SignalView(Game program) {
         this.program = program;
@@ -28,7 +30,8 @@ public class SignalView extends View {
     public void show() {
         initBatchStageCameraViewport();
         shapeRenderer = new ShapeRenderer();
-        soundData = new byte[SoundData.BUFFER_SIZE];
+        shapeRenderer.setColor(Color.RED);
+        soundData = new byte[SignalData.SIGNAL_DATA_SIZE];
         signalData = new SignalData(soundData);
 
         Texture back = new Texture(Gdx.files.internal("back.jpg"));
@@ -44,15 +47,15 @@ public class SignalView extends View {
         });
         stage.addActor(backButton);
 
-        SignalData.ACTIVE = true;
-        soundCapturing = new Thread(signalData);
+        signalData.setActive(true);
+        Thread soundCapturing = new Thread(signalData);
         soundCapturing.start();
     }
 
     @Override
     protected void viewDispose() {
         signalData.closeLine();
-        SignalData.ACTIVE = false;
+        signalData.setActive(false);
     }
 
     @Override
@@ -61,10 +64,10 @@ public class SignalView extends View {
     }
 
     private void drawBytes() {
+        j = 0;
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for (int i = 0; i < soundData.length; i++) {
-            shapeRenderer.setColor(Color.RED);
-            shapeRenderer.circle(i, soundData[i] + HEIGHT/2, 2);
+        for (int i = 0; i < SignalData.SIGNAL_DATA_SIZE; i++, j += plus) {
+            shapeRenderer.circle(j, soundData[i] + height, 1.5f);
         }
         shapeRenderer.end();
     }
